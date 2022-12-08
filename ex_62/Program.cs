@@ -1,9 +1,55 @@
 ﻿// Задача 62. Напишите программу, которая заполнит спирально массив 4 на 4.
 
-PrintArray(
-    ConvertArrayToFourByFour(
-    ArrayFillNumbersInOrder(10, 16)
-    ));
+int[,] array = new int[8,7];
+FillArrayClockwise(ArrayFillNumbersInOrder(10,array.GetLength(0)*array.GetLength(1)), array);
+PrintArray(array);
+
+
+
+
+void FillArrayClockwise(int[] inputArray, int[,] outputArray)
+{
+    int x = 0;
+    int y = 0;
+    
+    int[,] directionMultiplier = new int[4,2]{{0,1}, {1,0}, {0, -1}, {-1, 0}};
+    int currentDirection = 0;
+    int lengthToGo;
+    
+    int toStepX = outputArray.GetLength(1) - 1;
+    int toStepY = outputArray.GetLength(0) - 1;
+    int stepNum = 0; // Общий счетчик 
+    while (true)
+    {
+        if (currentDirection == 0 || currentDirection == 2)
+            lengthToGo = toStepX;
+        else
+            lengthToGo = toStepY;
+        for (int i = 0; i < lengthToGo; i++)
+        {
+            outputArray[y,x] = inputArray[stepNum];
+            x += directionMultiplier[currentDirection,1];
+            y += directionMultiplier[currentDirection,0];
+            stepNum++;  
+        }
+        if (currentDirection == 0 || currentDirection == 2)
+            toStepY = --toStepY;
+        else 
+            if (currentDirection == 1 || currentDirection == 3)
+                toStepX = --toStepX;
+        currentDirection++;
+        if (currentDirection == 4) currentDirection = 0;
+        if (outputArray[y,x] == 0)
+        {
+            outputArray[y,x] = inputArray[stepNum];
+            x += directionMultiplier[currentDirection,1];
+            y += directionMultiplier[currentDirection,0];
+            stepNum++;
+        }
+        else
+            return;
+    }             
+}
 
 
 int[] ArrayFillNumbersInOrder(int startNum, int arraySize)
@@ -16,28 +62,6 @@ int[] ArrayFillNumbersInOrder(int startNum, int arraySize)
     return array;
 }
 
-int[,] ConvertArrayToFourByFour(int[] array)
-{
-    int[,] outArray = new int[4, 4];
-    outArray[0, 0] = array [0];
-    outArray[0, 1] = array [1];
-    outArray[0, 2] = array [2];
-    outArray[0, 3] = array [3];
-    outArray[1, 3] = array [4];
-    outArray[2, 3] = array [5];
-    outArray[3, 3] = array [6];
-    outArray[3, 2] = array [7];
-    outArray[3, 1] = array [8];
-    outArray[3, 0] = array [9];
-    outArray[2, 0] = array [10];
-    outArray[1, 0] = array [11];
-    outArray[1, 1] = array [12];
-    outArray[1, 2] = array [13];
-    outArray[2, 2] = array [14];
-    outArray[2, 1] = array [15];
-    return outArray;
-}
-
 void PrintArray(int[,] inArray)
 {
     for (int i = 0; i < inArray.GetLength(0); i++)
@@ -48,4 +72,5 @@ void PrintArray(int[,] inArray)
         }
          Console.WriteLine();
     }
+    Console.WriteLine();
 }
